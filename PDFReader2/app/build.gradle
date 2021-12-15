@@ -1,0 +1,73 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.example.megrc.pdfreader2"
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+configurations {
+    umlJavadoc
+    singleHtmlJavadoc
+}
+File flexDocHome = file("$projectDir/../../tools/docflex-doclet-1.6.1")
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    // Libraries I've added
+    implementation 'com.github.barteksc:android-pdf-viewer:3.1.0-beta.1'
+
+}
+
+android.applicationVariants.all {
+    it.assembleProvider.get().dependsOn(singleHtmlJavadoc)
+    it.assembleProvider.get().dependsOn(umlJavadoc)
+}
+
+task singleHtmlJavadoc(type: Javadoc) {
+    doFirst {
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        android.applicationVariants.all { variant -> classpath += project.files(variant.javaCompileProvider.get().classpath.join(File.pathSeparator)) }
+    }
+    source = android.sourceSets.main.java.srcDirs
+    options.doclet = "com.docflex.javadoc.Doclet"
+    options.docletpath = [file(new File(flexDocHome,"/lib/docflex-doclet.jar"))]
+    options.addBooleanOption "private", true
+    destinationDir = file("./build/outputs/singlehtmljavadoc")
+    options.addFileOption("template",file(new File(flexDocHome,"/templates/javadoc/PlainDoc.tpl")))
+    options.addStringOption("f","PlainDoc.html")
+    options.addStringOption("format","HTML")
+    options.addBooleanOption("nodialog=quiet",true)
+    options.addStringOption("p:docTitle","Detailed Class Breakdown")
+    options.addBooleanOption("launchviewer=false",true)
+    failOnError false
+}
+
+task umlJavadoc(type: Exec) {
+    def cp = project.files()
+    doFirst {
+        cp += project.files(android.getBootClasspath().join(File.pathSeparator))
+        android.applicationVariants.all { variant -> cp += project.files(variant.javaCompileProvider.get().classpath.join(File.pathSeparator)) }
+        mkdir("$buildDir/outputs/uml")
+        new File("$buildDir/outputs/uml/.classpath").text = cp.join(File.pathSeparator)
+    }
+    commandLine "$projectDir/../../tools/GenClassDiagram.cmd", android.sourceSets.main.java.srcDirs.join(File.pathSeparator), file("$buildDir/outputs/uml")
+}

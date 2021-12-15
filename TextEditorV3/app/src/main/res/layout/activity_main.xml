@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="ExtraText"
+    android:padding="10dp">
+
+    <EditText
+        android:id="@+id/titleEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="#A1979B"
+        android:gravity="center"
+        android:hint="Title" />
+
+    <EditText
+        android:id="@+id/descriptionEditText"
+        android:layout_width="374dp"
+        android:layout_height="543dp"
+        android:layout_below="@+id/titleEditText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
+        android:background="#EEE8AA"
+        android:gravity="left"
+        android:hint="Description"
+        android:inputType="textMultiLine"
+        android:textColor="#000000" />
+
+    <Button
+        android:id="@+id/openBtn"
+        android:layout_width="130dp"
+        android:layout_height="76dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="15dp"
+        android:gravity="center"
+        android:text="Open" />
+
+    <Button
+        android:id="@+id/saveBtn"
+        android:layout_width="130dp"
+        android:layout_height="76dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="15dp"
+        android:gravity="center"
+        android:text="Save" />
+
+</RelativeLayout>
